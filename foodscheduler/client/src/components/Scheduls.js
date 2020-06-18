@@ -5,8 +5,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import { withStyles } from '@material-ui/core/styles';
 
-
-
 class Scheduls extends React.Component {
     render() {
         let data = this.props;

@@ -7,6 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -16,51 +17,57 @@ const styles = theme => ({
   },
   table: {
     minWidth: 780
+  },
+  progress: {
+    margin: theme.spacing.unit *2
   }
   
 })
 
-const scheduls = [
-  {
-    'id': 1,
-    'ap': '아침',
-    'main': '김치찌게',
-    'main_img': 'https://placeimg.com/64/64/any',
-    'sub1': '제육볶음',
-    'sub1_img': 'https://placeimg.com/64/64/any',
-    'sub2': '미나리무침',
-    'sub2_img': 'https://placeimg.com/64/64/any',
-    'chef1': 'Tune',
-    'chef2': '짱짱맨'
-  },
-  {
-    'id': 2,
-    'ap': '저녘',
-    'main': '불고기',
-    'main_img': 'https://placeimg.com/64/64/any',
-    'sub1': '된장찌개',
-    'sub1_img': 'https://placeimg.com/64/64/any',
-    'sub2': '감자셀러드',
-    'sub2_img': 'https://placeimg.com/64/64/any',
-    'chef1': '에드워드',
-    'chef2': '이윤복'
-  }
-]
-
 class App extends Component {
+  state = {
+    customers: "",
+    loading: 0
+  }
+
+  componentDidMount(){
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then(dataFromServer => this.setState({customers: dataFromServer}))
+      .catch(err => console.log(err));
+  }
+
+  progress = () => {
+    const {loading} = this.state;
+    this.setState({ loading: loading >= 100 ? 0 : loading + 1});
+  }
+
+  callApi = async() => {
+    const response = await fetch('/api/main');
+    const dataFromServer = await response.json();
+    return dataFromServer;
+  }
+
   render() {
     const { classes } = this.props;
+    let data = this.state;
     return (
       <Paper className={classes.root}>
         <h3>안녕!! 나는 오늘의 식단표야 :)</h3>
         <Table className={classes.table}>
           <TableBody>
           <TableRow>
-              {scheduls.map(s => {return (
+              {data.customers ? data.customers.map(s => {return (
                 <TableCell>
                   <Scheduls id={s.id} ap={s.ap} main={s.main} main_img={s.main_img} sub1={s.sub1} sub1_img={s.sub1_img} sub2={s.sub2} sub2_img={s.sub2_img} chef1={s.chef1} chef2={s.chef2}/>
                 </TableCell>
-              )})}
+              )}) :
+              <TableRow>
+                <TableCell colSpan="2" align="center">
+                  <CircularProgress className={classes.progress} variant="determinate" value={data.loading}/> 
+                </TableCell>
+              </TableRow> 
+              }
               </TableRow>
           </TableBody>
         </Table>
