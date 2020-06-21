@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FoodAdd from './components/FoodAdd';
 import './App.css';
 import Scheduls from './components/Scheduls';
 import Table from '@material-ui/core/Table';
@@ -12,22 +13,36 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const styles = theme => ({
   root: {
       width: '100%',
-      marginTop: theme.spacing.unit *3,
+      marginTop: theme.spacing(3),
       overflowX: "auto"
   },
   table: {
     minWidth: 780
   },
   progress: {
-    margin: theme.spacing.unit *2
+    margin: theme.spacing(2)
   }
   
 })
 
 class App extends Component {
-  state = {
-    customers: "",
-    loading: 0
+
+  constructor(props){
+    super(props);
+    this.state = {
+      customers: '',
+      completed: 0
+    }
+  }
+
+  stateRefresh = () => {
+    this.setState({
+      customers: '',
+      completed: 0
+    });
+    this.callApi()
+    .then(dataFromServer => this.setState({customers: dataFromServer}))
+    .catch(err => console.log(err));
   }
 
   componentDidMount(){
@@ -52,26 +67,27 @@ class App extends Component {
     const { classes } = this.props;
     let data = this.state;
     return (
-      <Paper className={classes.root}>
-        <h3>안녕!! 나는 오늘의 식단표야 :)</h3>
-        <Table className={classes.table}>
-          <TableBody>
-          <TableRow>
-              {data.customers ? data.customers.map(s => {return (
-                <TableCell>
-                  <Scheduls id={s.id} ap={s.ap} main={s.main} main_img={s.main_img} sub1={s.sub1} sub1_img={s.sub1_img} sub2={s.sub2} sub2_img={s.sub2_img} chef1={s.chef1} chef2={s.chef2}/>
-                </TableCell>
-              )}) :
+      <div>
+        <Paper className={classes.root}>
+          <h3>안녕!! 나는 오늘의 식단표야 :)</h3>
+          <Table className={classes.table}>
+            <TableBody>
               <TableRow>
+                {data.customers ? data.customers.map(s => {return (
+                  <TableCell>
+                    <Scheduls key={s.id} id={s.id} ap={s.ap} main={s.main} main_img={s.main_img} sub1={s.sub1} sub1_img={s.sub1_img} sub2={s.sub2} sub2_img={s.sub2_img} chef1={s.chef1} chef2={s.chef2}/>
+                  </TableCell>
+                )}) :
                 <TableCell colSpan="2" align="center">
-                  <CircularProgress className={classes.progress} variant="determinate" value={data.loading}/> 
+                  <CircularProgress key={data.id} className={classes.progress} variant="determinate" value={data.loading}/> 
                 </TableCell>
-              </TableRow> 
               }
               </TableRow>
-          </TableBody>
-        </Table>
-      </Paper>
+            </TableBody>
+          </Table>
+        </Paper>
+        <FoodAdd stateRefresh = {this.stateRefresh}/>
+      </div>
     );
   }
 }
