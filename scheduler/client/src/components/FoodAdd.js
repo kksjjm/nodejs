@@ -8,11 +8,11 @@ class FoodAdd extends React.Component {
         this.state = {
             ap: '',
             main: '',
-            main_img: null,
+            main_img: undefined,
             sub1:'',
-            sub1_img: null,
+            sub1_img: undefined,
             sub2:'',
-            sub2_img: null,
+            sub2_img: undefined,
             chef1:'',
             chef2:''
         }
@@ -28,11 +28,11 @@ class FoodAdd extends React.Component {
         this.setState({
             ap: '',
             main: '',
-            main_img: null,
+            main_img: undefined,
             sub1:'',
-            sub1_img: null,
+            sub1_img: undefined,
             sub2:'',
-            sub2_img: null,
+            sub2_img: undefined,
             chef1:'',
             chef2:''
         })
@@ -41,7 +41,7 @@ class FoodAdd extends React.Component {
     handleFileChange = (event) => {
         this.setState({
             file: event.target.files[0],
-            filename: event.target.value
+            filename: event.target.value,
         })
     }
 

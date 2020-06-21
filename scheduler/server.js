@@ -25,7 +25,7 @@ const uploadData = multer({dest: './upload'})
 
 app.get('/api/main', (req, res) => {
     connection.query(
-      "SELECT * FROM TEST",
+      "SELECT * FROM TEST WHERE isActive = 0",
       (err, rows, fields) => {
         res.send(rows);
       }
@@ -33,8 +33,9 @@ app.get('/api/main', (req, res) => {
 });
 
 app.use('/images', express.static('/upload'));
+
 app.post('/api/main', uploadData.single('images'), (req, res) => {
-  let sql = 'INSERT INTO TEST VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let sql = 'INSERT INTO TEST VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)';
   let ap = req.body.ap;
   let main = req.body.main;
   let main_img = '/images/' + req.file.filename;
@@ -54,3 +55,11 @@ app.post('/api/main', uploadData.single('images'), (req, res) => {
 });
 
 app.listen(port, ( ()=> console.log(`Listening on port: ${port}`)));
+
+app.delete('/api/main/:id', (req, res) => {
+  let sql = 'UPDATE TEST SET isActive = 1 WHERE id = ?';
+  let params = [req.params.id];
+  connection.query(sql, params, (err, rows, fields) => {
+    res.send(rows);
+  })
+})

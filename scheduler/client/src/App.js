@@ -75,7 +75,7 @@ class App extends Component {
               <TableRow>
                 {data.customers ? data.customers.map(s => {return (
                   <TableCell>
-                    <Scheduls key={s.id} id={s.id} ap={s.ap} main={s.main} main_img={s.main_img} sub1={s.sub1} sub1_img={s.sub1_img} sub2={s.sub2} sub2_img={s.sub2_img} chef1={s.chef1} chef2={s.chef2}/>
+                    <Scheduls key={s.id} id={s.id} ap={s.ap} main={s.main} main_img={s.main_img} sub1={s.sub1} sub1_img={s.sub1_img} sub2={s.sub2} sub2_img={s.sub2_img} chef1={s.chef1} chef2={s.chef2} stateRefresh={this.stateRefresh}/>
                   </TableCell>
                 )}) :
                 <TableCell colSpan="2" align="center">
